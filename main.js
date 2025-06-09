@@ -1,6 +1,6 @@
 const WIDTH = 9;
 const HEIGHT = 9;
-const BOMBS = 10;
+let bombs = 10;
 
 let bombBoard = [];
 let numbers = [];
@@ -10,11 +10,16 @@ let gameOver = false;
 function updateInfo() {
   const info = document.getElementById('info');
   if (info) {
-    info.textContent = `${WIDTH} x ${HEIGHT} - ${BOMBS} bombs`;
+    info.textContent = `${WIDTH} x ${HEIGHT} - ${bombs} bombs`;
   }
 }
 
 function initGame() {
+  const input = document.getElementById('bomb-count');
+  if (input) {
+    const val = parseInt(input.value, 10);
+    if (!isNaN(val) && val > 0) bombs = val;
+  }
   bombBoard = Array.from({ length: HEIGHT }, () => Array(WIDTH).fill(false));
   numbers = Array.from({ length: HEIGHT }, () => Array(WIDTH).fill(0));
   visible = Array.from({ length: HEIGHT }, () => Array(WIDTH).fill('?'));
@@ -23,7 +28,7 @@ function initGame() {
 
   // place bombs
   let placed = 0;
-  while (placed < BOMBS) {
+  while (placed < bombs) {
     const y = Math.floor(Math.random() * HEIGHT);
     const x = Math.floor(Math.random() * WIDTH);
     if (!bombBoard[y][x]) {
@@ -150,7 +155,7 @@ function checkWin() {
       if (visible[y][x] !== '?' && visible[y][x] !== 'F') opened++;
     }
   }
-  if (opened === HEIGHT * WIDTH - BOMBS) {
+  if (opened === HEIGHT * WIDTH - bombs) {
     gameOver = true;
     alert('You Win!');
     revealAll();
@@ -160,7 +165,7 @@ function checkWin() {
 }
 
 function updateDisplay() {
-  const probs = computeProbabilities(visible, BOMBS);
+  const probs = computeProbabilities(visible, bombs);
   const table = document.getElementById('board');
   for (let y = 0; y < HEIGHT; y++) {
     for (let x = 0; x < WIDTH; x++) {
@@ -175,7 +180,7 @@ function updateDisplay() {
         if (p !== null) td.dataset.prob = (p * 100).toFixed(1) + '%';
       } else if (cell === 'F') {
         td.classList.add('flag');
-        td.textContent = 'F';
+        td.textContent = '🚩';
       } else if (cell === 'B') {
         td.classList.add('open');
         td.textContent = 'B';
