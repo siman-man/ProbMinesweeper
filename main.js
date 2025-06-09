@@ -1,5 +1,5 @@
-const WIDTH = 9;
-const HEIGHT = 9;
+let WIDTH = 9;
+let HEIGHT = 9;
 let bombs = 10;
 
 let firstMove = true;
@@ -21,6 +21,16 @@ function initGame() {
   if (input) {
     const val = parseInt(input.value, 10);
     if (!isNaN(val) && val > 0) bombs = val;
+  }
+  const wInput = document.getElementById('width-input');
+  if (wInput) {
+    const val = parseInt(wInput.value, 10);
+    if (!isNaN(val) && val > 0 && val <= 20) WIDTH = val;
+  }
+  const hInput = document.getElementById('height-input');
+  if (hInput) {
+    const val = parseInt(hInput.value, 10);
+    if (!isNaN(val) && val > 0 && val <= 20) HEIGHT = val;
   }
   bombBoard = Array.from({ length: HEIGHT }, () => Array(WIDTH).fill(false));
   numbers = Array.from({ length: HEIGHT }, () => Array(WIDTH).fill(0));
@@ -190,11 +200,10 @@ function updateDisplay() {
         const p = probs[y][x];
         if (p !== null) {
           td.dataset.prob = (p * 100).toFixed(1) + '%';
-          let hue;
-          if (p <= 0.25) {
-            hue = 120 - (p / 0.25) * 60;
-          } else {
-            hue = 60 - ((p - 0.25) / 0.75) * 60;
+          let hue = 120;
+          if (p > 0.1) {
+            const scale = (p - 0.1) / 0.9;
+            hue = 120 - scale * 120;
           }
           td.style.color = `hsl(${hue}, 70%, 45%)`;
         } else {
