@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProbMinesweeper</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0;
+    }
+
+    .header {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 15px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .github-link {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .github-link:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .main-content {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      max-width: 90vw;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    #controls {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #info {
+      width: 100%;
+      text-align: center;
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    label {
+      color: #666;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    input[type="number"] {
+      width: 70px;
+      padding: 8px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    button {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    input[type="checkbox"] {
+      margin-right: 8px;
+      transform: scale(1.2);
+      accent-color: #667eea;
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 3px;
+      margin: 0 auto;
+      background: #e9ecef;
+      padding: 10px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    td {
+      width: 55px;
+      height: 55px;
+      text-align: center;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+      font-weight: 600;
+      position: relative;
+      cursor: pointer;
+      background: #ffffff;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    td:hover:not(.open) {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    td.open {
+      background: #f8f9fa;
+      cursor: default;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      transform: scale(0.98);
+    }
+
+    td.flag {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+      color: white;
+      font-size: 20px;
+    }
+
+    td.flag::before {
+      content: '🚩';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* 数字の色分け */
+    td.open[data-count="1"] { color: #4285f4; }
+    td.open[data-count="2"] { color: #34a853; }
+    td.open[data-count="3"] { color: #ea4335; }
+    td.open[data-count="4"] { color: #673ab7; }
+    td.open[data-count="5"] { color: #ff5722; }
+    td.open[data-count="6"] { color: #00bcd4; }
+    td.open[data-count="7"] { color: #333333; }
+    td.open[data-count="8"] { color: #795548; }
+
+    /* 確率表示のスタイリング */
+    td.prob {
+      position: relative;
+      overflow: hidden;
+    }
+
+    td.prob::after {
+      content: attr(data-prob);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 13px;
+      font-weight: 800;
+      text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 -1px 1px rgba(0, 0, 0, 0.3);
+      z-index: 1;
+      letter-spacing: 0.5px;
+    }
+
+    /* 危険度別のスタイル - JavaScript でオーバーライドされます */
+    td.prob[data-prob-value="safe"]::after {
+      text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.9),
+        0 -1px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    td.prob[data-prob-value="low"]::after {
+      text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.7),
+        0 -1px 1px rgba(0, 0, 0, 0.3);
+    }
+
+    td.prob[data-prob-value="medium"]::after {
+      text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.6),
+        0 -1px 1px rgba(0, 0, 0, 0.4);
+    }
+
+    td.prob[data-prob-value="high"] {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    td.prob[data-prob-value="high"]::after {
+      text-shadow: 
+        0 1px 3px rgba(255, 255, 255, 0.9),
+        0 -1px 2px rgba(0, 0, 0, 0.5);
+      font-size: 14px;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      50% {
+        transform: scale(1.02);
+        box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+      }
+    }
+
+    /* レスポンシブデザイン */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      td {
+        width: 45px;
+        height: 45px;
+      }
+      
+      #controls {
+        flex-direction: column;
+      }
+      
+      label {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .github-link {
+        font-size: 1rem;
+        padding: 8px 16px;
+      }
+    }
+
+    /* ゲームオーバー・勝利時のオーバーレイ */
+    .game-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+
+    .game-message {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .game-message h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .game-message.win h2 {
+      color: #00b894;
+    }
+
+    .game-message.lose h2 {
+      color: #ff6b6b;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* 爆発したセルのスタイル */
+    td.exploded {
+      animation: explode 0.5s ease-out;
+      box-shadow: 0 0 20px rgba(255, 71, 87, 0.8) !important;
+    }
+
+    @keyframes explode {
+      0% {
+        transform: scale(1);
+        background-color: #ff4757;
+      }
+      50% {
+        transform: scale(1.2);
+        background-color: #ff3742;
+        box-shadow: 0 0 30px rgba(255, 71, 87, 1);
+      }
+      100% {
+        transform: scale(1);
+        background-color: #ff4757;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <a href="https://github.com/siman-man/ProbMinesweeper" class="github-link" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+      </svg>
+      GitHub
+    </a>
+  </div>
+  
+  <div class="main-content">
+    <div class="container">
+      <h1>ProbMinesweeper</h1>
+      <div id="controls">
+        <div id="info">💣 地雷を避けて全てのマスを開けよう！</div>
+        <label>
+          幅: 
+          <input id="width-input" type="number" min="1" max="15" value="9">
+        </label>
+        <label>
+          高さ: 
+          <input id="height-input" type="number" min="1" max="15" value="9">
+        </label>
+        <label>
+          地雷数: 
+          <input id="bomb-count" type="number" min="1" value="10">
+        </label>
+        <label>
+          <input id="auto-open" type="checkbox">
+          自動オープン (危険度0%)
+        </label>
+        <label>
+          <input id="auto-flag" type="checkbox">
+          自動フラグ (危険度100%)
+        </label>
+        <button id="new-game">新しく始める</button>
+      </div>
+      <table id="board"></table>
+    </div>
+  </div>
+  
+  <div class="game-overlay" id="game-overlay">
+    <div class="game-message" id="game-message">
+      <h2></h2>
+      <button onclick="document.getElementById('game-overlay').style.display = 'none'; updateDisplay();">盤面を確認</button>
+    </div>
+  </div>
+  
+  <script src="solver.js"></script>
+  <script src="main.js"></script>
+</body>
+
+</html>
