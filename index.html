@@ -4,10 +4,19 @@
 <meta charset="UTF-8">
 <title>Minesweeper Probabilities</title>
 <style>
-  table { border-collapse: collapse; }
+  body { text-align: center; }
+  table {
+    border-collapse: collapse;
+    margin: 0 auto;
+  }
   td {
-    width: 30px; height: 30px; text-align: center; border: 1px solid #888;
-    font-family: sans-serif; position: relative; cursor: pointer;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border: 1px solid #888;
+    font-family: sans-serif;
+    position: relative;
+    cursor: pointer;
   }
   td.open { background: #ddd; cursor: default; }
   td.flag { background: #f99; }
@@ -16,13 +25,15 @@
     position: absolute;
     bottom: 2px;
     right: 2px;
-    font-size: 10px;
+    font-size: 12px;
     color: blue;
   }
 </style>
 </head>
 <body>
 <h1>Minesweeper</h1>
+<div id="info"></div>
+<button id="new-game">新しく始める</button>
 <table id="board"></table>
 <script src="solver.js"></script>
 <script src="main.js"></script>

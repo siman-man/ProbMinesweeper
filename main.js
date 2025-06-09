@@ -7,11 +7,19 @@ let numbers = [];
 let visible = [];
 let gameOver = false;
 
+function updateInfo() {
+  const info = document.getElementById('info');
+  if (info) {
+    info.textContent = `${WIDTH} x ${HEIGHT} - ${BOMBS} bombs`;
+  }
+}
+
 function initGame() {
   bombBoard = Array.from({ length: HEIGHT }, () => Array(WIDTH).fill(false));
   numbers = Array.from({ length: HEIGHT }, () => Array(WIDTH).fill(0));
   visible = Array.from({ length: HEIGHT }, () => Array(WIDTH).fill('?'));
   gameOver = false;
+  updateInfo();
 
   // place bombs
   let placed = 0;
@@ -179,4 +187,8 @@ function updateDisplay() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', initGame);
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('new-game');
+  if (btn) btn.addEventListener('click', initGame);
+  initGame();
+});
