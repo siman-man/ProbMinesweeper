@@ -5,19 +5,18 @@ function computeProbabilities(board, totalBombs) {
   const H = board.length;
   const W = board[0].length;
 
+  // treat flags as unknown cells so user marks do not affect solving
+  board = board.map(row => row.map(c => (c === 'F' ? '?' : c)));
+
   // parse board
   const numbers = [];
   const frontierMap = Array.from({ length: H }, () => Array(W).fill(-1));
   const frontier = [];
-  let flagged = 0;
   let unknownCount = 0;
 
   for (let y = 0; y < H; y++) {
     for (let x = 0; x < W; x++) {
-      const c = board[y][x];
-      if (c === 'F') {
-        flagged++;
-      } else if (c === '?') {
+      if (board[y][x] === '?') {
         unknownCount++;
       }
     }
@@ -37,14 +36,13 @@ function computeProbabilities(board, totalBombs) {
   for (let y = 0; y < H; y++) {
     for (let x = 0; x < W; x++) {
       const c = board[y][x];
-      if (c === '?' || c === 'F') continue;
+      if (c === '?') continue;
       const num = c === '.' ? 0 : parseInt(c, 10);
-      const cell = { y, x, num, unknowns: [], flagged: 0 };
+      const cell = { y, x, num, unknowns: [] };
       for (const [dy, dx] of dirs) {
         const ny = y + dy, nx = x + dx;
         if (!inBounds(ny, nx)) continue;
         const nc = board[ny][nx];
-        if (nc === 'F') cell.flagged++;
         if (nc === '?') {
           if (frontierMap[ny][nx] === -1) {
             frontierMap[ny][nx] = frontier.length;
@@ -58,7 +56,7 @@ function computeProbabilities(board, totalBombs) {
   }
 
   const outsideCount = unknownCount - frontier.length;
-  const bombsLeft = totalBombs - flagged;
+  const bombsLeft = totalBombs;
 
   // Precompute combination numbers using Pascal's triangle
   const comb = Array.from({ length: 100 }, () => Array(100).fill(0));
@@ -83,7 +81,7 @@ function computeProbabilities(board, totalBombs) {
   let outsideProbSum = 0;
 
   // data for each number cell: remaining bombs and unknowns
-  const remaining = numbers.map(c => ({ bombs: c.num - c.flagged, unk: c.unknowns.length }));
+  const remaining = numbers.map(c => ({ bombs: c.num, unk: c.unknowns.length }));
 
   function dfs(idx, usedBombs) {
     if (idx === frontier.length) {
