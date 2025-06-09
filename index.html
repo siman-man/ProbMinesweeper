@@ -10,8 +10,8 @@
     margin: 0 auto;
   }
   td {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     text-align: center;
     border: 1px solid #888;
     font-family: sans-serif;
@@ -23,16 +23,22 @@
   td.prob::after {
     content: attr(data-prob);
     position: absolute;
-    bottom: 2px;
-    right: 2px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-size: 12px;
     color: blue;
+  }
+
+  #new-game {
+    margin-bottom: 10px;
   }
 </style>
 </head>
 <body>
 <h1>Minesweeper</h1>
 <div id="info"></div>
+<label>Bombs: <input id="bomb-count" type="number" min="1" value="10"></label>
 <button id="new-game">新しく始める</button>
 <table id="board"></table>
 <script src="solver.js"></script>
