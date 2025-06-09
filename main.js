@@ -115,10 +115,9 @@ function openCell(y, x) {
     firstMove = false;
   }
   if (bombBoard[y][x]) {
-    visible[y][x] = 'B';
+    visible[y][x] = '💣';
     gameOver = true;
     revealAll();
-    alert('Game Over');
     return;
   }
   floodFill(y, x);
@@ -159,7 +158,7 @@ function revealAll() {
   for (let y = 0; y < HEIGHT; y++) {
     for (let x = 0; x < WIDTH; x++) {
       if (bombBoard[y][x]) {
-        if (visible[y][x] !== 'B') visible[y][x] = 'B';
+        if (visible[y][x] !== '💣') visible[y][x] = '💣';
       } else if (visible[y][x] === '?') {
         const n = numbers[y][x];
         visible[y][x] = n === 0 ? '.' : String(n);
@@ -216,9 +215,9 @@ function updateDisplay() {
         td.classList.add('flag');
         td.textContent = '🚩';
         td.style.color = '';
-      } else if (cell === 'B') {
+      } else if (cell === '💣') {
         td.classList.add('open');
-        td.textContent = 'B';
+        td.textContent = '💣';
         td.style.color = '';
       } else {
         td.classList.add('open');
