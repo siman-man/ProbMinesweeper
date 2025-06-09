@@ -177,16 +177,25 @@ function updateDisplay() {
       if (cell === '?') {
         td.classList.add('prob');
         const p = probs[y][x];
-        if (p !== null) td.dataset.prob = (p * 100).toFixed(1) + '%';
+        if (p !== null) {
+          td.dataset.prob = (p * 100).toFixed(1) + '%';
+          const hue = (1 - p) * 120; // green to red
+          td.style.color = `hsl(${hue}, 70%, 45%)`;
+        } else {
+          td.style.color = '';
+        }
       } else if (cell === 'F') {
         td.classList.add('flag');
         td.textContent = '🚩';
+        td.style.color = '';
       } else if (cell === 'B') {
         td.classList.add('open');
         td.textContent = 'B';
+        td.style.color = '';
       } else {
         td.classList.add('open');
         if (cell !== '.') td.textContent = cell;
+        td.style.color = '';
       }
     }
   }
