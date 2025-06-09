@@ -2,6 +2,8 @@ const WIDTH = 9;
 const HEIGHT = 9;
 let bombs = 10;
 
+let firstMove = true;
+
 let bombBoard = [];
 let numbers = [];
 let visible = [];
@@ -24,19 +26,13 @@ function initGame() {
   numbers = Array.from({ length: HEIGHT }, () => Array(WIDTH).fill(0));
   visible = Array.from({ length: HEIGHT }, () => Array(WIDTH).fill('?'));
   gameOver = false;
+  firstMove = true;
   updateInfo();
+  buildBoard();
+  updateDisplay();
+}
 
-  // place bombs
-  let placed = 0;
-  while (placed < bombs) {
-    const y = Math.floor(Math.random() * HEIGHT);
-    const x = Math.floor(Math.random() * WIDTH);
-    if (!bombBoard[y][x]) {
-      bombBoard[y][x] = true;
-      placed++;
-    }
-  }
-  // compute numbers
+function computeNumbers() {
   const dirs = [
     [-1, -1], [-1, 0], [-1, 1],
     [0, -1],           [0, 1],
@@ -55,8 +51,19 @@ function initGame() {
       numbers[y][x] = count;
     }
   }
-  buildBoard();
-  updateDisplay();
+}
+
+function placeBombsSafe(sy, sx) {
+  let placed = 0;
+  while (placed < bombs) {
+    const y = Math.floor(Math.random() * HEIGHT);
+    const x = Math.floor(Math.random() * WIDTH);
+    if (!bombBoard[y][x] && !(y === sy && x === sx)) {
+      bombBoard[y][x] = true;
+      placed++;
+    }
+  }
+  computeNumbers();
 }
 
 function buildBoard() {
@@ -93,6 +100,10 @@ function handleRight(e) {
 
 function openCell(y, x) {
   if (visible[y][x] !== '?') return;
+  if (firstMove) {
+    placeBombsSafe(y, x);
+    firstMove = false;
+  }
   if (bombBoard[y][x]) {
     visible[y][x] = 'B';
     gameOver = true;
@@ -179,7 +190,12 @@ function updateDisplay() {
         const p = probs[y][x];
         if (p !== null) {
           td.dataset.prob = (p * 100).toFixed(1) + '%';
-          const hue = (1 - p) * 120; // green to red
+          let hue;
+          if (p <= 0.25) {
+            hue = 120 - (p / 0.25) * 60;
+          } else {
+            hue = 60 - ((p - 0.25) / 0.75) * 60;
+          }
           td.style.color = `hsl(${hue}, 70%, 45%)`;
         } else {
           td.style.color = '';
