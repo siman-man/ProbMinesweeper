@@ -1,47 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Minesweeper Probabilities</title>
-<style>
-  body { text-align: center; }
-  table {
-    border-collapse: collapse;
-    margin: 20px auto 0;
-  }
-  td {
-    width: 41px;
-    height: 41px;
-    text-align: center;
-    border: 1px solid #888;
-    font-family: sans-serif;
-    position: relative;
-    cursor: pointer;
-  }
-  td.open { background: #ddd; cursor: default; }
-  td.flag { background: #f99; }
-  td.prob::after {
-    content: attr(data-prob);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 13px;
-  }
-  #controls { margin-bottom: 15px; }
-</style>
+  <meta charset="UTF-8">
+  <title>Minesweeper Probabilities</title>
+  <style>
+    body {
+      text-align: center;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 20px auto 0;
+    }
+
+    td {
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      border: 1px solid #888;
+      font-family: sans-serif;
+      position: relative;
+      cursor: pointer;
+    }
+
+    td.open {
+      background: #ddd;
+      cursor: default;
+    }
+
+    td.flag {
+      background: #f99;
+    }
+
+    td.prob::after {
+      content: attr(data-prob);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 14px;
+    }
+
+    #controls {
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
+
 <body>
-<h1>Minesweeper</h1>
-<div id="controls">
-  <div id="info"></div>
-  <label>Width: <input id="width-input" type="number" min="1" max="20" value="9"></label>
-  <label>Height: <input id="height-input" type="number" min="1" max="20" value="9"></label>
-  <label>Bombs: <input id="bomb-count" type="number" min="1" value="10"></label>
-  <button id="new-game">新しく始める</button>
-</div>
-<table id="board"></table>
-<script src="solver.js"></script>
-<script src="main.js"></script>
+  <h1>Minesweeper</h1>
+  <div id="controls">
+    <div id="info"></div>
+    <label>Width: <input id="width-input" type="number" min="1" max="20" value="9"></label>
+    <label>Height: <input id="height-input" type="number" min="1" max="20" value="9"></label>
+    <label>Bombs: <input id="bomb-count" type="number" min="1" value="10"></label>
+    <button id="new-game">新しく始める</button>
+  </div>
+  <table id="board"></table>
+  <script src="solver.js"></script>
+  <script src="main.js"></script>
 </body>
+
 </html>
