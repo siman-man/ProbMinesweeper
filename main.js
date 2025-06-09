@@ -325,10 +325,26 @@ function updateDisplay() {
         td.style.fontWeight = '';
       } else {
         td.classList.add('open');
-        if (cell !== '.') td.textContent = cell;
+        if (cell !== '.') {
+          td.textContent = cell;
+          // 数字に応じて色を設定（マインスイーパーの伝統的な色分け）
+          const num = parseInt(cell);
+          if (!isNaN(num)) {
+            const colors = {
+              1: '#0000ff', // 青
+              2: '#008000', // 緑
+              3: '#ff0000', // 赤
+              4: '#000080', // 紺
+              5: '#800000', // 茶
+              6: '#008080', // シアン
+              7: '#000000', // 黒
+              8: '#808080'  // グレー
+            };
+            td.style.color = colors[num] || '#000000';
+            td.style.fontWeight = 'bold';
+          }
+        }
         td.style.backgroundColor = '#ffffff';
-        td.style.color = '';
-        td.style.fontWeight = '';
       }
     }
   }
