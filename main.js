@@ -200,10 +200,13 @@ function updateDisplay() {
         const p = probs[y][x];
         if (p !== null) {
           td.dataset.prob = (p * 100).toFixed(1) + '%';
-          let hue = 120;
-          if (p > 0.1) {
+          let hue;
+          if (p < 0.1) {
+            const scale = p / 0.1;
+            hue = 120 - scale * 60; // safe (green) -> warning (yellow)
+          } else {
             const scale = (p - 0.1) / 0.9;
-            hue = 120 - scale * 120;
+            hue = 60 - scale * 60; // warning -> danger (red)
           }
           td.style.color = `hsl(${hue}, 70%, 45%)`;
         } else {
