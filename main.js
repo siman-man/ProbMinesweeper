@@ -186,7 +186,7 @@ function checkWin() {
 }
 
 function updateDisplay() {
-  const probs = computeProbabilities(visible, bombs);
+  const probs = firstMove ? null : computeProbabilities(visible, bombs);
   const table = document.getElementById('board');
   for (let y = 0; y < HEIGHT; y++) {
     for (let x = 0; x < WIDTH; x++) {
@@ -197,7 +197,7 @@ function updateDisplay() {
       td.removeAttribute('data-prob');
       if (cell === '?') {
         td.classList.add('prob');
-        const p = probs[y][x];
+        const p = probs ? probs[y][x] : null;
         if (p !== null) {
           td.dataset.prob = (p * 100).toFixed(1) + '%';
           let hue;
@@ -232,5 +232,9 @@ function updateDisplay() {
 document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('new-game');
   if (btn) btn.addEventListener('click', initGame);
+  const wInput = document.getElementById('width-input');
+  const hInput = document.getElementById('height-input');
+  if (wInput) wInput.addEventListener('input', initGame);
+  if (hInput) hInput.addEventListener('input', initGame);
   initGame();
 });
