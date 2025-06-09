@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Minesweeper Probabilities</title>
+<style>
+  table { border-collapse: collapse; }
+  td {
+    width: 30px; height: 30px; text-align: center; border: 1px solid #888;
+    font-family: sans-serif; position: relative; cursor: pointer;
+  }
+  td.open { background: #ddd; cursor: default; }
+  td.flag { background: #f99; }
+  td.prob::after {
+    content: attr(data-prob);
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-size: 10px;
+    color: blue;
+  }
+</style>
+</head>
+<body>
+<h1>Minesweeper</h1>
+<table id="board"></table>
+<script src="solver.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
