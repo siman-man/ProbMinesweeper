@@ -7,7 +7,7 @@
   body { text-align: center; }
   table {
     border-collapse: collapse;
-    margin: 0 auto;
+    margin: 20px auto 0;
   }
   td {
     width: 50px;
@@ -26,20 +26,18 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 12px;
-    color: blue;
+    font-size: 16px;
   }
-
-  #new-game {
-    margin-bottom: 10px;
-  }
+  #controls { margin-bottom: 15px; }
 </style>
 </head>
 <body>
 <h1>Minesweeper</h1>
-<div id="info"></div>
-<label>Bombs: <input id="bomb-count" type="number" min="1" value="10"></label>
-<button id="new-game">新しく始める</button>
+<div id="controls">
+  <div id="info"></div>
+  <label>Bombs: <input id="bomb-count" type="number" min="1" value="10"></label>
+  <button id="new-game">新しく始める</button>
+</div>
 <table id="board"></table>
 <script src="solver.js"></script>
 <script src="main.js"></script>
