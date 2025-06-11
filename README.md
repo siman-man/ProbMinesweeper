@@ -4,7 +4,7 @@
 
 地雷の確率をリアルタイムで計算・表示する高度なマインスイーパーゲームです。
 
-TopCoder Marathon Match 122 で使用した、BDD ベースの爆弾埋設確率計算アルゴリズムを流用しています
+TopCoder Marathon Match 122 の知見を活用した、組み合わせ論ベースの爆弾埋設確率計算アルゴリズムを実装しています
 
 参考: https://www.topcoder.com/challenges/bb7a2759-8aa3-464e-8300-fb175a8efcae
 
